@@ -23,11 +23,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.alexstha03.easyryde",
-      "versionCode": 1
+      "versionCode": 1,
+      "jsEngine": "hermes"
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [

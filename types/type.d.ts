@@ -1,4 +1,5 @@
-import { TextInputProps, TouchableOpacityProps } from "react-native";
+import { TextInputProps, TouchableOpacityProps ,ImageSourcePropType
+} from "react-native";
 
 declare interface Driver {
   id: number;
@@ -63,7 +64,8 @@ declare interface ButtonProps extends TouchableOpacityProps {
 }
 
 declare interface GoogleInputProps {
-  icon?: string;
+  icon?: ImageSourcePropType;
+
   initialLocation?: string;
   containerStyle?: string;
   textInputBackgroundColor?: string;

@@ -1,7 +1,23 @@
 {
+  "cli": {
+    "version": ">= 6.0.0",
+    "appVersionSource": "remote"
+  },
   "build": {
     "production": {
       "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY": "pk_test_bGFzdGluZy1jb2x0LTU5LmNsZXJrLmFjY291bnRzLmRldiQ",
+        "EXPO_PUBLIC_SERVER_URL": "https://uber.dev/",
+        "EXPO_PUBLIC_GEOAPIFY_API_KEY": "a5b777cb80ff42b391a8a67eb71b070c",
+        "EXPO_PUBLIC_PLACES_API_KEY": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS",
+        "EXPO_PUBLIC_DIRECTIONS_API_KEY": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS",
+        "EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_test_51QvEqHBVhNvn41UTlpuX1P94uMGDZWMnkkL4PZRjakntEFTjtc8IeKn4VLBiG90I9TfZlPfAXDEFvlOHk1owDMfH00S9gClVPf",
+
+        "CLERK_SECRET_KEY": "@CLERK_SECRET_KEY",
+        "STRIPE_SECRET_KEY": "@STRIPE_SECRET_KEY",
+        "DATABASE_URL": "@DATABASE_URL"
+      },
       "android": {
         "buildType": "apk"
       },
@@ -9,9 +25,6 @@
         "simulator": true
       }
     }
-  },
-  "cli": {
-    "version": ">= 6.0.0"
   },
   "submit": {
     "production": {}

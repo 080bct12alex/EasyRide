@@ -5,29 +5,44 @@ import { formatDate, formatTime } from "@/lib/utils";
 import { Ride } from "@/types/type";
 
 const RideCard = ({ ride }: { ride: Ride }) => {
+  // Guard against missing data
+  if (!ride || !ride.driver) return null;
+
+  const {
+    origin_address,
+    destination_address,
+    destination_longitude,
+    destination_latitude,
+    created_at,
+    ride_time,
+    payment_status,
+    driver,
+  } = ride;
+
+  const mapUri = `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${destination_longitude},${destination_latitude}&zoom=14&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY ?? "MISSING_KEY"}`;
+
   return (
     <View className="flex flex-row items-center justify-center bg-white rounded-lg shadow-sm shadow-neutral-300 mb-3">
       <View className="flex flex-col items-start justify-center p-3">
         <View className="flex flex-row items-center justify-between">
           <Image
-            source={{
-              uri: `https://maps.geoapify.com/v1/staticmap?style=osm-bright&width=600&height=400&center=lonlat:${ride.destination_longitude},${ride.destination_latitude}&zoom=14&apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_API_KEY}`,
-            }}
+            source={{ uri: mapUri }}
             className="w-[80px] h-[90px] rounded-lg"
+            resizeMode="cover"
           />
 
           <View className="flex flex-col mx-5 gap-y-5 flex-1">
             <View className="flex flex-row items-center gap-x-2">
               <Image source={icons.to} className="w-5 h-5" />
               <Text className="text-md font-JakartaMedium" numberOfLines={1}>
-                {ride.origin_address}
+                {origin_address}
               </Text>
             </View>
 
             <View className="flex flex-row items-center gap-x-2">
               <Image source={icons.point} className="w-5 h-5" />
               <Text className="text-md font-JakartaMedium" numberOfLines={1}>
-                {ride.destination_address}
+                {destination_address}
               </Text>
             </View>
           </View>
@@ -39,7 +54,7 @@ const RideCard = ({ ride }: { ride: Ride }) => {
               Date & Time
             </Text>
             <Text className="text-md font-JakartaBold" numberOfLines={1}>
-              {formatDate(ride.created_at)}, {formatTime(ride.ride_time)}
+              {formatDate(created_at)}, {formatTime(ride_time)}
             </Text>
           </View>
 
@@ -48,7 +63,7 @@ const RideCard = ({ ride }: { ride: Ride }) => {
               Driver
             </Text>
             <Text className="text-md font-JakartaBold">
-              {ride.driver.first_name} {ride.driver.last_name}
+              {driver.first_name} {driver.last_name}
             </Text>
           </View>
 
@@ -57,7 +72,7 @@ const RideCard = ({ ride }: { ride: Ride }) => {
               Car Seats
             </Text>
             <Text className="text-md font-JakartaBold">
-              {ride.driver.car_seats}
+              {driver.car_seats}
             </Text>
           </View>
 
@@ -66,9 +81,13 @@ const RideCard = ({ ride }: { ride: Ride }) => {
               Payment Status
             </Text>
             <Text
-              className={`text-md capitalize font-JakartaBold ${ride.payment_status === "paid" ? "text-green-500" : "text-red-500"}`}
+              className={`text-md capitalize font-JakartaBold ${
+                payment_status === "paid"
+                  ? "text-green-500"
+                  : "text-red-500"
+              }`}
             >
-              {ride.payment_status}
+              {payment_status}
             </Text>
           </View>
         </View>

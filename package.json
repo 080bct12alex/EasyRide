@@ -16,7 +16,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^2.1.0",
+    "@clerk/clerk-expo": "^2.11.6",
     "@expo/metro-runtime": "~3.2.3",
     "@expo/vector-icons": "^14.0.2",
     "@gorhom/bottom-sheet": "^4.6.4",
@@ -27,10 +27,12 @@
     "expo": "~51.0.39",
     "expo-auth-session": "~5.5.2",
     "expo-constants": "~16.0.2",
+    "expo-crypto": "~13.0.2",
     "expo-font": "~12.0.9",
     "expo-linking": "~6.3.1",
     "expo-local-authentication": "^14.0.1",
     "expo-location": "^17.0.1",
+    "expo-random": "~14.0.1",
     "expo-router": "~3.5.24",
     "expo-secure-store": "^13.0.2",
     "expo-splash-screen": "~0.27.7",

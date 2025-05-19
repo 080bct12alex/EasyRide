@@ -7,10 +7,12 @@
 - Expo
 - Stripe
 - PostgreSQL
-- Google Maps
+- Google Maps (patching with gomaps)
 - zustand
 - Clerk
 - Tailwind CSS
+  
+  
 
 <div align="center">
     <img src="https://img.shields.io/badge/-React_Native-black?style=for-the-badge&logoColor=white&logo=react&color=61DAFB" alt="reactnative" />

@@ -6,7 +6,7 @@
 - React Native 
 - Expo
 - Stripe
-- PostgreSQL
+- PostgreSQL 
 - Google Maps (patching with gomaps)
 - zustand
 - Clerk

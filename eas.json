@@ -19,8 +19,8 @@
         "STRIPE_SECRET_KEY":"sk_test_51QvEqHBVhNvn41UTZ6scbVnUJ7Ruw9uEd03CFf4s9i34ls5c4SikBugZdLODwX0RxUWwsyCFFm3JeVYoRwXQAF5000aO614cfn",
         "CLERK_SECRET_KEY":"sk_test_WSDSddhhteOGbkWOhvYrDOelucoToWsAbXGfTgzs4v",     
 
-        "DATABASE_URL":"postgresql://EasyRIDE-db_owner:npg_irjnLN2wXqB0@ep-quiet-field-a19oly35-pooler.ap-southeast-1.aws.neon.tech/EasyRIDE-db?sslmode=require"
-
+        "DATABASE_URL":"postgresql://EasyRIDE-db_owner:npg_irjnLN2wXqB0@ep-quiet-field-a19oly35-pooler.ap-southeast-1.aws.neon.tech/EasyRIDE-db?sslmode=require",
+        "EXPO_PUBLIC_SERVER_URL":"https://uber.com/"
 
       
       }

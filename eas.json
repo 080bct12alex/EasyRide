@@ -3,7 +3,8 @@
     "production": {
       "channel": "production",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "image": "ubuntu-22.04-jdk-17-ndk-25.2.9519653"
       },
       "ios": {
         "simulator": true

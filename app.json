@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "runtimeVersion": "1.0.0",
     "icon": "./assets/images/icon.png",
-    "scheme": "EasyRyde",
+    "scheme": "easyryde",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",

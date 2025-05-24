@@ -20,8 +20,8 @@
         "CLERK_SECRET_KEY":"sk_test_WSDSddhhteOGbkWOhvYrDOelucoToWsAbXGfTgzs4v",     
 
         "DATABASE_URL":"postgresql://EasyRIDE-db_owner:npg_irjnLN2wXqB0@ep-quiet-field-a19oly35-pooler.ap-southeast-1.aws.neon.tech/EasyRIDE-db?sslmode=require",
-        "EXPO_PUBLIC_SERVER_URL":"https://uber.dev/"
-
+        
+"EXPO_PUBLIC_API_URL":"https://easyryde-api.onrender.com"
       
       }
     }

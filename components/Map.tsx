@@ -23,8 +23,12 @@ const Map = () => {
     destinationLongitude,
   } = useLocationStore();
   const { selectedDriver, setDrivers } = useDriverStore();
+// Create an environment variable for the API base URL
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
-  const { data: drivers, loading, error } = useFetch<Driver[]>("/(api)/driver");
+// Use it in your fetch
+const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/api/driver`);
+
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {

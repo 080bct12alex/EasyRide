@@ -22,36 +22,25 @@
         "NSLocationWhenInUseUsageDescription": "Allow location for ride sharing."
       }
     },
-  "android": {
-  "adaptiveIcon": {
-    "foregroundImage": "./assets/images/adaptive-icon.png",
-    "backgroundColor": "#ffffff"
-  },
-  "package": "com.alexstha03.easyryde",
-  "versionCode": 1,
-  "jsEngine": "hermes",
-  "permissions": [
-    "ACCESS_FINE_LOCATION",
-    "ACCESS_COARSE_LOCATION"
-  ],
-  "config": {
-    "googleMaps": {
-      "apiKey": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS"
-      
-    }
-  },
-  "intentFilters": [],
-  "googleServicesFile": false
-}
-},
-
-    "web": {
-      "bundler": "metro",
-      "output": "server",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "experiments": {
-      "typedRoutes": true
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.alexstha03.easyryde",
+      "versionCode": 1,
+      "jsEngine": "hermes",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS"
+        }
+      },
+      "intentFilters": [],
+      "googleServicesFile": false
     },
     "extra": {
       "eas": {
@@ -63,7 +52,14 @@
       "DIRECTIONS_API_KEY": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS",
       "STRIPE_PUBLISHABLE_KEY": "pk_test_51QvEqHBVhNvn41UTlpuX1P94uMGDZWMnkkL4PZRjakntEFTjtc8IeKn4VLBiG90I9TfZlPfAXDEFvlOHk1owDMfH00S9gClVPf",
       "apiUrl": "https://easyryde-api.onrender.com"
-
     }
+  },
+  "web": {
+    "bundler": "metro",
+    "output": "server",
+    "favicon": "./assets/images/favicon.png"
+  },
+  "experiments": {
+    "typedRoutes": true
   }
-
+}

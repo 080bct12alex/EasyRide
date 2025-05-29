@@ -11,7 +11,10 @@ import { fetchAPI } from "@/lib/fetch";
 import { useLocationStore } from "@/store";
 import { PaymentProps } from "@/types/type";
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+import Constants from "expo-constants";
+
+const API_BASE_URL = Constants.expoConfig?.extra?.apiUrl ?? "MISSING_apiUrl";
+
 
 const Payment = ({
   fullName,

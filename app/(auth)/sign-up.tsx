@@ -10,6 +10,10 @@ import OAuth from "@/components/OAuth";
 import { icons, images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 
+import Constants from 'expo-constants';
+// Create an environment variable for the API base URL
+const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
+
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -51,7 +55,7 @@ const SignUp = () => {
         code: verification.code,
       });
       if (completeSignUp.status === "complete") {
-        await fetchAPI("/(api)/user", {
+        await fetchAPI(`${API_BASE_URL}/api/user`, {
           method: "POST",
           body: JSON.stringify({
             name: form.name,

@@ -21,6 +21,10 @@ import { useFetch } from "@/lib/fetch";
 import { useLocationStore } from "@/store";
 import { Ride } from "@/types/type";
 
+import Constants from 'expo-constants';
+// Create an environment variable for the API base URL
+const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
+
 const Home = () => {
   const { user } = useUser();
   const { signOut } = useAuth();
@@ -38,7 +42,7 @@ const Home = () => {
     data: recentRides,
     loading,
     error,
-  } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  } = useFetch<Ride[]>(`${API_BASE_URL}/api/ride/${user?.id}`);
 
   useEffect(() => {
     (async () => {

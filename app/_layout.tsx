@@ -8,10 +8,12 @@ import { LogBox } from "react-native";
 
 import { tokenCache } from "@/lib/auth";
 
+import Constants from "expo-constants";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+const publishableKey =  Constants.expoConfig?.extra?.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "MISSING_STRIPE_KEY";
 
 if (!publishableKey) {
   throw new Error(

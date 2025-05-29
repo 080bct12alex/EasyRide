@@ -7,6 +7,10 @@ import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore } from "@/store";
+import Constants from "expo-constants";
+
+const stripePublishableKey = Constants.expoConfig?.extra?.STRIPE_PUBLISHABLE_KEY ?? "MISSING_STRIPE_KEY";
+
 
 const BookRide = () => {
   const { user } = useUser();
@@ -19,9 +23,9 @@ const BookRide = () => {
 
   return (
     <StripeProvider
-      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+      publishableKey={stripePublishableKey}
       merchantIdentifier="merchant.com.uber"
-      urlScheme="myapp"
+      urlScheme="easyryde"
     >
       <RideLayout title="Book Ride">
         <>

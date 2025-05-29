@@ -3,6 +3,10 @@ import * as SecureStore from "expo-secure-store";
 
 import { fetchAPI } from "@/lib/fetch";
 
+
+import Constants from "expo-constants";
+const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
+
 export const tokenCache = {
   async getToken(key: string) {
     try {
@@ -39,7 +43,7 @@ export const googleOAuth = async (startOAuthFlow: any) => {
         await setActive({ session: createdSessionId });
 
         if (signUp.createdUserId) {
-          await fetchAPI("/(api)/user", {
+          await fetchAPI(`${API_BASE_URL}/api/user`, {
             method: "POST",
             body: JSON.stringify({
               name: `${signUp.firstName} ${signUp.lastName}`,

@@ -46,7 +46,14 @@
     "extra": {
       "eas": {
         "projectId": "f98f07e0-8bb1-45aa-ab26-0651feb7d31d"
-      }
+      },
+      "CLERK_PUBLISHABLE_KEY": "pk_test_bGFzdGluZy1jb2x0LTU5LmNsZXJrLmFjY291bnRzLmRldiQ",
+      "GEOAPIFY_API_KEY": "a5b777cb80ff42b391a8a67eb71b070c",
+      "PLACES_API_KEY": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS",
+      "DIRECTIONS_API_KEY": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS",
+      "STRIPE_PUBLISHABLE_KEY": "pk_test_51QvEqHBVhNvn41UTlpuX1P94uMGDZWMnkkL4PZRjakntEFTjtc8IeKn4VLBiG90I9TfZlPfAXDEFvlOHk1owDMfH00S9gClVPf",
+      "apiUrl": "https://easyryde-api.onrender.com"
+
     }
   }
 }

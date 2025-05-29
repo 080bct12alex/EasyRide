@@ -13,7 +13,10 @@ import {
 import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
-const directionsAPI = process.env.EXPO_PUBLIC_DIRECTIONS_API_KEY;
+import Constants from 'expo-constants';
+// Create an environment variable for the API base URL
+const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
+const directionsAPI = Constants.expoConfig.extra.DIRECTIONS_API_KEY;
 
 const Map = () => {
   const {
@@ -23,8 +26,8 @@ const Map = () => {
     destinationLongitude,
   } = useLocationStore();
   const { selectedDriver, setDrivers } = useDriverStore();
-// Create an environment variable for the API base URL
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+
 
 // Use it in your fetch
 const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/api/driver`);

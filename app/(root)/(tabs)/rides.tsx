@@ -6,6 +6,9 @@ import RideCard from "@/components/RideCard";
 import { images } from "@/constants";
 import { useFetch } from "@/lib/fetch";
 import { Ride } from "@/types/type";
+import Constants from 'expo-constants';
+// Create an environment variable for the API base URL
+const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
 
 const Rides = () => {
   const { user } = useUser();
@@ -14,7 +17,7 @@ const Rides = () => {
     data: recentRides,
     loading,
     error,
-  } = useFetch<Ride[]>(`/(api)/ride/${user?.id}`);
+  } = useFetch<Ride[]>(`${API_BASE_URL}/api/ride/${user?.id}`);
 
   return (
     <SafeAreaView className="flex-1 bg-white">

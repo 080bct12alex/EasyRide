@@ -37,8 +37,12 @@
   "config": {
     "googleMaps": {
       "apiKey": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS"
+      
     }
-  }
+  },
+  "intentFilters": [],
+  "googleServicesFile": false
+}
 },
 
     "web": {
@@ -62,4 +66,4 @@
 
     }
   }
-}
+

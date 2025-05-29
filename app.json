@@ -22,19 +22,25 @@
         "NSLocationWhenInUseUsageDescription": "Allow location for ride sharing."
       }
     },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.alexstha03.easyryde",
-      "versionCode": 1,
-      "jsEngine": "hermes",
-      "permissions": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ]
-    },
+  "android": {
+  "adaptiveIcon": {
+    "foregroundImage": "./assets/images/adaptive-icon.png",
+    "backgroundColor": "#ffffff"
+  },
+  "package": "com.alexstha03.easyryde",
+  "versionCode": 1,
+  "jsEngine": "hermes",
+  "permissions": [
+    "ACCESS_FINE_LOCATION",
+    "ACCESS_COARSE_LOCATION"
+  ],
+  "config": {
+    "googleMaps": {
+      "apiKey": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS"
+    }
+  }
+},
+
     "web": {
       "bundler": "metro",
       "output": "server",

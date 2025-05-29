@@ -14,9 +14,10 @@ import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
 
 import Constants from 'expo-constants';
-// Create an environment variable for the API base URL
-const API_BASE_URL = Constants.expoConfig.extra.apiUrl;
-const directionsAPI = Constants.expoConfig.extra.DIRECTIONS_API_KEY;
+
+// Use fallback to avoid `undefined`
+const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
+const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 
 const Map = () => {
   const {
@@ -27,11 +28,7 @@ const Map = () => {
   } = useLocationStore();
   const { selectedDriver, setDrivers } = useDriverStore();
 
-
-
-// Use it in your fetch
-const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/api/driver`);
-
+  const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/api/driver`);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
 
   useEffect(() => {
@@ -98,7 +95,7 @@ const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/ap
       showsUserLocation={true}
       userInterfaceStyle="light"
     >
-      {markers.map((marker, index) => (
+      {markers.map((marker) => (
         <Marker
           key={marker.id}
           coordinate={{
@@ -125,14 +122,14 @@ const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/ap
           />
           <MapViewDirections
             origin={{
-              latitude: userLatitude!,
-              longitude: userLongitude!,
+              latitude: userLatitude ?? 0,
+              longitude: userLongitude ?? 0,
             }}
             destination={{
               latitude: destinationLatitude,
               longitude: destinationLongitude,
             }}
-            apikey={directionsAPI!}
+            apikey={directionsAPI}
             strokeColor="#0286FF"
             strokeWidth={2}
           />

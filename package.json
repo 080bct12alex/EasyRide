@@ -60,7 +60,7 @@
     "react-native-web": "~0.19.10",
     "stripe": "^16.7.0",
     "zustand": "^4.5.4",
-    "@maplibre/react-native-maplibre-gl": "10.1.4"
+    "@maplibre/maplibre-react-native": "10.1.4"
     
   },
   "devDependencies": {

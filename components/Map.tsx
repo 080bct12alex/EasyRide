@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View, Image } from "react-native";
-import MaplibreGL from "@rnmapbox/maps";
+import MaplibreGL from "@maplibre/react-native-maplibre-gl";
 
 import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";
@@ -16,9 +16,6 @@ import Constants from "expo-constants";
 
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
-
-// Disable Mapbox token (MapLibre GL uses open-source vector tiles)
-MaplibreGL.setAccessToken(null);
 
 const Map = () => {
   const {

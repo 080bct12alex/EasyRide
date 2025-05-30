@@ -14,6 +14,10 @@ import { Driver, MarkerData } from "@/types/type";
 
 import Constants from "expo-constants";
 
+// ✅ MapLibre debug logging & telemetry toggle
+MaplibreGL.setTelemetryEnabled(false);
+MaplibreGL.setLogLevel(MaplibreGL.LogLevel.debug);
+
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 
@@ -63,7 +67,6 @@ const Map = () => {
         setDrivers(updatedDrivers as MarkerData[]);
       });
 
-      // Fetch directions from GoMaps Directions API
       (async () => {
         try {
           const res = await fetch(
@@ -71,7 +74,6 @@ const Map = () => {
           );
           const data = await res.json();
 
-          // Decode polyline from route to GeoJSON LineString for MapLibre
           const polyline = data.routes[0].overview_polyline.points;
           const geojson = decodePolylineToGeoJSON(polyline);
           setRouteGeoJSON(geojson);
@@ -141,7 +143,8 @@ const Map = () => {
     <View style={{ flex: 1, borderRadius: 20, overflow: "hidden" }}>
       <MaplibreGL.MapView
         style={{ flex: 1 }}
-        styleURL={MaplibreGL.StyleURL.Street}
+        // ✅ Updated with working public tile server
+        styleURL="https://demotiles.maplibre.org/style.json"
         compassEnabled={true}
         zoomEnabled={true}
         pitchEnabled={false}

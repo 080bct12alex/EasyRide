@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View, Image } from "react-native";
-import MaplibreGL from "@maplibre/react-native-maplibre-gl";
+import MaplibreGL from "@maplibre/maplibre-react-native";
 
 import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";

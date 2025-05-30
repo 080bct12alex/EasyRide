@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Image, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Text,
+  View,
+} from "react-native";
 import { useStripe } from "@stripe/stripe-react-native";
 import { useAuth } from "@clerk/clerk-expo";
 import { router } from "expo-router";
@@ -10,11 +16,9 @@ import { images } from "@/constants";
 import { fetchAPI } from "@/lib/fetch";
 import { useLocationStore } from "@/store";
 import { PaymentProps } from "@/types/type";
-
 import Constants from "expo-constants";
 
 const API_BASE_URL = Constants.expoConfig?.extra?.apiUrl ?? "MISSING_apiUrl";
-
 
 const Payment = ({
   fullName,
@@ -41,12 +45,34 @@ const Payment = ({
   const openPaymentSheet = async () => {
     setLoading(true);
     try {
-      await initializePaymentSheet();
-      const { error } = await presentPaymentSheet();
+      const initSuccess = await initializePaymentSheet();
+      if (!initSuccess) return;
 
+      const { error } = await presentPaymentSheet();
       if (error) {
         Alert.alert(`Error code: ${error.code}`, error.message);
       } else {
+        // Payment succeeded — now create ride booking
+        await fetchAPI(`${API_BASE_URL}/api/ride/create`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            origin_address: userAddress,
+            destination_address: destinationAddress,
+            origin_latitude: userLatitude,
+            origin_longitude: userLongitude,
+            destination_latitude: destinationLatitude,
+            destination_longitude: destinationLongitude,
+            ride_time: rideTime.toFixed(0),
+            fare_price: parseInt(amount) * 100,
+            payment_status: "paid",
+            driver_id: driverId,
+            user_id: userId,
+          }),
+        });
+
         setSuccess(true);
       }
     } catch (err) {
@@ -56,88 +82,38 @@ const Payment = ({
     }
   };
 
-  const initializePaymentSheet = async () => {
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "Example, Inc.",
-      intentConfiguration: {
-        mode: {
-          amount: parseInt(amount) * 100,
-          currencyCode: "usd",
-        },
-        confirmHandler: async (
-          paymentMethod,
-          shouldSavePaymentMethod,
-          intentCreationCallback,
-        ) => {
-          // Create PaymentIntent on your hosted API
-          const { paymentIntent, customer } = await fetchAPI(
-            `${API_BASE_URL}/api/stripe/create`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                name: fullName || email.split("@")[0],
-                email,
-                amount,
-                paymentMethodId: paymentMethod.id,
-              }),
-            },
-          );
+  const initializePaymentSheet = async (): Promise<boolean> => {
+    try {
+      const response = await fetchAPI(`${API_BASE_URL}/api/stripe/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fullName || email.split("@")[0],
+          email,
+          amount,
+        }),
+      });
 
-          if (paymentIntent.client_secret) {
-            // Confirm the PaymentIntent on your hosted API
-            const { result } = await fetchAPI(
-              `${API_BASE_URL}/api/stripe/pay`,
-              {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  payment_method_id: paymentMethod.id,
-                  payment_intent_id: paymentIntent.id,
-                  customer_id: customer,
-                  client_secret: paymentIntent.client_secret,
-                }),
-              },
-            );
+      const { paymentIntent, customer, ephemeralKey } = response;
 
-            if (result.client_secret) {
-              // Create the ride booking on your hosted API
-              await fetchAPI(`${API_BASE_URL}/api/ride/create`, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  origin_address: userAddress,
-                  destination_address: destinationAddress,
-                  origin_latitude: userLatitude,
-                  origin_longitude: userLongitude,
-                  destination_latitude: destinationLatitude,
-                  destination_longitude: destinationLongitude,
-                  ride_time: rideTime.toFixed(0),
-                  fare_price: parseInt(amount) * 100,
-                  payment_status: "paid",
-                  driver_id: driverId,
-                  user_id: userId,
-                }),
-              });
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "EasyRyde",
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey.secret,
+        paymentIntentClientSecret: paymentIntent.client_secret,
+        allowsDelayedPaymentMethods: true,
+        returnURL: "myapp://book-ride",
+      });
 
-              intentCreationCallback({
-                clientSecret: result.client_secret,
-              });
-            }
-          }
-        },
-      },
-      returnURL: "myapp://book-ride",
-    });
+      if (error) {
+        Alert.alert("Error", error.message);
+        return false;
+      }
 
-    if (error) {
-      Alert.alert("Error", error.message);
+      return true;
+    } catch (error) {
+      Alert.alert("Init Error", "Failed to initialize payment sheet");
+      return false;
     }
   };
 

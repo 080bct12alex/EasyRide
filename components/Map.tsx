@@ -146,7 +146,8 @@ const Map = () => {
     <View style={{ flex: 1 }}>
       <MaplibreGL.MapView
         style={{ flex: 1 }}
-        styleURL={`https://api.maptiler.com/maps/hybrid/style.json?key=${maptilerKey}`}
+        styleURL={`https://api.maptiler.com/maps/streets-v2/style.json?key=${maptilerKey}`}
+
         compassEnabled
         zoomEnabled
         pitchEnabled={false}

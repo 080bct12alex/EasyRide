@@ -6,16 +6,15 @@ import { icons } from "@/constants";
 import { useFetch } from "@/lib/fetch";
 import {
   calculateDriverTimes,
-  calculateRegion,
   generateMarkersFromData,
 } from "@/lib/map";
 import { useDriverStore, useLocationStore } from "@/store";
 import { Driver, MarkerData } from "@/types/type";
-
 import Constants from "expo-constants";
 
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
+const maptilerKey = Constants.expoConfig.extra?.MAPTILER_API_KEY ?? "";
 
 const Map = () => {
   const {
@@ -26,10 +25,7 @@ const Map = () => {
   } = useLocationStore();
 
   const { selectedDriver, setDrivers } = useDriverStore();
-
-  const { data: drivers, loading, error } = useFetch<Driver[]>(
-    `${API_BASE_URL}/api/driver`
-  );
+  const { data: drivers, loading, error } = useFetch<Driver[]>(`${API_BASE_URL}/api/driver`);
 
   const [markers, setMarkers] = useState<MarkerData[]>([]);
   const [routeGeoJSON, setRouteGeoJSON] = useState<any>(null);
@@ -63,25 +59,32 @@ const Map = () => {
         setDrivers(updatedDrivers as MarkerData[]);
       });
 
-      // Fetch directions from GoMaps Directions API
+      // Fetch directions from GoMaps API
       (async () => {
         try {
           const res = await fetch(
             `https://maps.gomaps.pro/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`
           );
           const data = await res.json();
+          const polyline = data.routes?.[0]?.overview_polyline?.points;
 
-          // Decode polyline from route to GeoJSON LineString for MapLibre
-          const polyline = data.routes[0].overview_polyline.points;
-          const geojson = decodePolylineToGeoJSON(polyline);
-          setRouteGeoJSON(geojson);
+          if (polyline) {
+            const geojson = decodePolylineToGeoJSON(polyline);
+            setRouteGeoJSON(geojson);
+          }
         } catch (err) {
           console.error("Error fetching directions:", err);
           setRouteGeoJSON(null);
         }
       })();
     }
-  }, [markers, destinationLatitude, destinationLongitude, userLatitude, userLongitude]);
+  }, [
+    markers,
+    destinationLatitude,
+    destinationLongitude,
+    userLatitude,
+    userLongitude,
+  ]);
 
   function decodePolylineToGeoJSON(encoded: string) {
     let index = 0,
@@ -123,32 +126,34 @@ const Map = () => {
     };
   }
 
-  if (loading || (!userLatitude && !userLongitude))
+  if (loading || (!userLatitude && !userLongitude)) {
     return (
       <View className="flex justify-center items-center w-full h-full">
         <ActivityIndicator size="small" color="#000" />
       </View>
     );
+  }
 
-  if (error)
+  if (error) {
     return (
       <View className="flex justify-center items-center w-full h-full">
         <Text>Error: {error}</Text>
       </View>
     );
+  }
 
   return (
-    <View style={{ flex: 1, borderRadius: 20, overflow: "hidden" }}>
+    <View style={{ flex: 1 }}>
       <MaplibreGL.MapView
         style={{ flex: 1 }}
-        styleURL={MaplibreGL.StyleURL.Street}
-        compassEnabled={true}
-        zoomEnabled={true}
+        styleURL={`https://api.maptiler.com/maps/hybrid/style.json?key=${maptilerKey}`}
+        compassEnabled
+        zoomEnabled
         pitchEnabled={false}
         rotateEnabled={false}
         logoEnabled={false}
         attributionEnabled={false}
-        localizeLabels={true}
+        localizeLabels
       >
         <MaplibreGL.Camera
           zoomLevel={14}
@@ -157,7 +162,7 @@ const Map = () => {
           animationDuration={1000}
         />
 
-        {/* User Location Marker */}
+        {/* User Marker */}
         {userLatitude && userLongitude && (
           <MaplibreGL.PointAnnotation
             id="user-location"
@@ -176,7 +181,7 @@ const Map = () => {
           </MaplibreGL.PointAnnotation>
         )}
 
-        {/* Driver Markers */}
+        {/* Drivers */}
         {markers.map((marker) => (
           <MaplibreGL.PointAnnotation
             key={marker.id.toString()}
@@ -193,17 +198,21 @@ const Map = () => {
           </MaplibreGL.PointAnnotation>
         ))}
 
-        {/* Destination Marker */}
+        {/* Destination */}
         {destinationLatitude && destinationLongitude && (
           <MaplibreGL.PointAnnotation
             id="destination"
             coordinate={[destinationLongitude, destinationLatitude]}
           >
-            <Image source={icons.pin} style={{ width: 30, height: 30 }} resizeMode="contain" />
+            <Image
+              source={icons.pin}
+              style={{ width: 30, height: 30 }}
+              resizeMode="contain"
+            />
           </MaplibreGL.PointAnnotation>
         )}
 
-        {/* Route Line */}
+        {/* Route */}
         {routeGeoJSON && (
           <MaplibreGL.ShapeSource id="routeSource" shape={routeGeoJSON}>
             <MaplibreGL.LineLayer

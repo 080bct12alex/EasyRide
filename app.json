@@ -52,7 +52,9 @@
       "PLACES_API_KEY": "AlzaSy3rPtnjrk86JWEHVAukqKI0zCSmak15DqL",
       "DIRECTIONS_API_KEY": "AlzaSy3rPtnjrk86JWEHVAukqKI0zCSmak15DqL",
       "STRIPE_PUBLISHABLE_KEY": "pk_test_51QvEqHBVhNvn41UTlpuX1P94uMGDZWMnkkL4PZRjakntEFTjtc8IeKn4VLBiG90I9TfZlPfAXDEFvlOHk1owDMfH00S9gClVPf",
-      "apiUrl": "https://easyryde-api.onrender.com"
+      "apiUrl": "https://easyryde-api.onrender.com",
+      "MAPTILER_API_KEY": "YKXRjZkuECDD8iaZKizc"
+      
     }
   },
   "web": {

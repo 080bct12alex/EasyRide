@@ -16,6 +16,10 @@ const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 const maptilerKey = Constants.expoConfig.extra?.MAPTILER_API_KEY ?? "";
 
+// Initialize MapLibre
+MaplibreGL.setAccessToken(maptilerKey);
+MaplibreGL.setConnected(true);
+
 const Map = () => {
   const {
     userLongitude,

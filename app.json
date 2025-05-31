@@ -32,6 +32,7 @@
       "versionCode": 1,
       "jsEngine": "hermes",
       "permissions": [
+        "INTERNET",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],

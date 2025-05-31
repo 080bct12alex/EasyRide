@@ -133,7 +133,7 @@ const Payment = ({
           }
         },
       },
-      returnURL: "myapp://book-ride",
+      returnURL: "easyryde://book-ride",
     });
 
     if (error) {

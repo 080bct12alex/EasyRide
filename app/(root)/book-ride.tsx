@@ -1,16 +1,18 @@
 import { useUser } from "@clerk/clerk-expo";
 import { StripeProvider } from "@stripe/stripe-react-native";
-import { Image, Text, View } from "react-native";
+import { Image, Text, View, Alert } from "react-native";
+import { useEffect } from "react";
+import * as Linking from "expo-linking";
+import Constants from "expo-constants";
 
 import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
 import { useDriverStore, useLocationStore } from "@/store";
-import Constants from "expo-constants";
 
-const stripePublishableKey = Constants.expoConfig?.extra?.STRIPE_PUBLISHABLE_KEY ?? "MISSING_STRIPE_KEY";
-
+const stripePublishableKey =
+  Constants.expoConfig?.extra?.STRIPE_PUBLISHABLE_KEY ?? "MISSING_STRIPE_KEY";
 
 const BookRide = () => {
   const { user } = useUser();
@@ -20,6 +22,31 @@ const BookRide = () => {
   const driverDetails = drivers?.filter(
     (driver) => +driver.id === selectedDriver,
   )[0];
+
+  // ✅ Deep link handler for Stripe redirect
+  useEffect(() => {
+    const handleDeepLink = (event: Linking.EventType) => {
+      const url = event.url;
+      const { queryParams } = Linking.parse(url);
+
+      console.log("Stripe redirect:", queryParams);
+
+      const { payment_intent, redirect_status } = queryParams;
+
+      if (redirect_status === "succeeded") {
+        Alert.alert("Payment Successful", `Payment Intent: ${payment_intent}`);
+        // You could navigate to a success screen or finalize the booking!
+      } else if (redirect_status === "failed" || redirect_status === "canceled") {
+        Alert.alert("Payment Failed", "Please try again.");
+      }
+    };
+
+    Linking.addEventListener("url", handleDeepLink);
+
+    return () => {
+      Linking.removeEventListener("url", handleDeepLink);
+    };
+  }, []);
 
   return (
     <StripeProvider

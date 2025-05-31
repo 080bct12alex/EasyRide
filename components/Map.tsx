@@ -15,11 +15,9 @@ import Constants from "expo-constants";
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 const maptilerKey = Constants.expoConfig.extra?.MAPTILER_API_KEY ?? "";
-const rasterTileURL = `https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=${maptilerKey}`;
 
-
-// Set up MapLibre
-MaplibreGL.setAccessToken(null); // Not used with MapTiler raster
+// Initialize MapLibre
+MaplibreGL.setAccessToken(maptilerKey);
 MaplibreGL.setConnected(true);
 
 const Map = () => {
@@ -65,6 +63,7 @@ const Map = () => {
         setDrivers(updatedDrivers as MarkerData[]);
       });
 
+      // Fetch directions from GoMaps API
       (async () => {
         try {
           const res = await fetch(
@@ -72,6 +71,7 @@ const Map = () => {
           );
           const data = await res.json();
           const polyline = data.routes?.[0]?.overview_polyline?.points;
+
           if (polyline) {
             const geojson = decodePolylineToGeoJSON(polyline);
             setRouteGeoJSON(geojson);
@@ -82,20 +82,30 @@ const Map = () => {
         }
       })();
     }
-  }, [markers, destinationLatitude, destinationLongitude, userLatitude, userLongitude]);
+  }, [
+    markers,
+    destinationLatitude,
+    destinationLongitude,
+    userLatitude,
+    userLongitude,
+  ]);
 
   function decodePolylineToGeoJSON(encoded: string) {
-    let index = 0, lat = 0, lng = 0;
-    const coordinates: number[][] = [];
+    let index = 0,
+      lat = 0,
+      lng = 0,
+      coordinates: number[][] = [];
 
     while (index < encoded.length) {
-      let b, shift = 0, result = 0;
+      let b,
+        shift = 0,
+        result = 0;
       do {
         b = encoded.charCodeAt(index++) - 63;
         result |= (b & 0x1f) << shift;
         shift += 5;
       } while (b >= 0x20);
-      const dlat = result & 1 ? ~(result >> 1) : result >> 1;
+      let dlat = result & 1 ? ~(result >> 1) : result >> 1;
       lat += dlat;
 
       shift = 0;
@@ -105,7 +115,7 @@ const Map = () => {
         result |= (b & 0x1f) << shift;
         shift += 5;
       } while (b >= 0x20);
-      const dlng = result & 1 ? ~(result >> 1) : result >> 1;
+      let dlng = result & 1 ? ~(result >> 1) : result >> 1;
       lng += dlng;
 
       coordinates.push([lng * 1e-5, lat * 1e-5]);
@@ -138,49 +148,45 @@ const Map = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <MaplibreGL.MapView style={{ flex: 1 }}>
+      <MaplibreGL.MapView
+        style={{ flex: 1 }}
+        styleURL={`https://api.maptiler.com/maps/streets/style.json?key=${maptilerKey}`}
+
+        compassEnabled
+        zoomEnabled
+        pitchEnabled={false}
+        rotateEnabled={false}
+        logoEnabled={false}
+        attributionEnabled={false}
+        localizeLabels
+      >
         <MaplibreGL.Camera
           zoomLevel={14}
-          centerCoordinate={[userLongitude, userLatitude]}
+          centerCoordinate={[userLongitude ?? 0, userLatitude ?? 0]}
           animationMode="flyTo"
           animationDuration={1000}
         />
 
-        {/* ✅ Use RasterSource for MapTiler */}
-        {maptilerKey ? (
-  <MaplibreGL.RasterSource
-    id="maptiler"
-    tileSize={256}
-    tiles={[rasterTileURL]}
-
-  >
-    <MaplibreGL.RasterLayer id="tile-layer" sourceID="maptiler" />
-  </MaplibreGL.RasterSource>
-) : (
-  <Text style={{ position: 'absolute', top: 20, left: 10, color: 'red' }}>
-    Missing MapTiler API key
-  </Text>
-)}
-
-
         {/* User Marker */}
-        <MaplibreGL.PointAnnotation
-          id="user-location"
-          coordinate={[userLongitude, userLatitude]}
-        >
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              backgroundColor: "#0286FF",
-              borderRadius: 10,
-              borderWidth: 3,
-              borderColor: "white",
-            }}
-          />
-        </MaplibreGL.PointAnnotation>
+        {userLatitude && userLongitude && (
+          <MaplibreGL.PointAnnotation
+            id="user-location"
+            coordinate={[userLongitude, userLatitude]}
+          >
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                backgroundColor: "#0286FF",
+                borderRadius: 10,
+                borderWidth: 3,
+                borderColor: "white",
+              }}
+            />
+          </MaplibreGL.PointAnnotation>
+        )}
 
-        {/* Driver Markers */}
+        {/* Drivers */}
         {markers.map((marker) => (
           <MaplibreGL.PointAnnotation
             key={marker.id.toString()}
@@ -197,7 +203,7 @@ const Map = () => {
           </MaplibreGL.PointAnnotation>
         ))}
 
-        {/* Destination Marker */}
+        {/* Destination */}
         {destinationLatitude && destinationLongitude && (
           <MaplibreGL.PointAnnotation
             id="destination"
@@ -211,7 +217,7 @@ const Map = () => {
           </MaplibreGL.PointAnnotation>
         )}
 
-        {/* Route Line */}
+        {/* Route */}
         {routeGeoJSON && (
           <MaplibreGL.ShapeSource id="routeSource" shape={routeGeoJSON}>
             <MaplibreGL.LineLayer

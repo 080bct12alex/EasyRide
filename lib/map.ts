@@ -1,3 +1,4 @@
+
 import { Driver, MarkerData } from "@/types/type";
 
 import Constants from "expo-constants";
@@ -94,48 +95,31 @@ export const calculateDriverTimes = async ({
     !destinationLatitude ||
     !destinationLongitude
   )
-    return [];
+    return;
 
   try {
     const timesPromises = markers.map(async (marker) => {
-      try {
-        const responseToUser = await fetch(
-          `https://maps.gomaps.pro/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`,
-        );
-        const dataToUser = await responseToUser.json();
-        
-        if (!dataToUser.routes || dataToUser.routes.length === 0) {
-          return { ...marker, time: 0, price: "0.00" };
-        }
-        
-        const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
+      const responseToUser = await fetch(
+        `https://maps.gomaps.pro/maps/api/directions/json?origin=${marker.latitude},${marker.longitude}&destination=${userLatitude},${userLongitude}&key=${directionsAPI}`,
+      );
+      const dataToUser = await responseToUser.json();
+      const timeToUser = dataToUser.routes[0].legs[0].duration.value; // Time in seconds
 
-        const responseToDestination = await fetch(
-          `https://maps.gomaps.pro/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`,
-        );
-        const dataToDestination = await responseToDestination.json();
-        
-        if (!dataToDestination.routes || dataToDestination.routes.length === 0) {
-          return { ...marker, time: timeToUser / 60, price: "0.00" };
-        }
-        
-        const timeToDestination =
-          dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
+      const responseToDestination = await fetch(
+        `https://maps.gomaps.pro/maps/api/directions/json?origin=${userLatitude},${userLongitude}&destination=${destinationLatitude},${destinationLongitude}&key=${directionsAPI}`,
+      );
+      const dataToDestination = await responseToDestination.json();
+      const timeToDestination =
+        dataToDestination.routes[0].legs[0].duration.value; // Time in seconds
 
-        const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
-        const price = (totalTime * 0.5).toFixed(2); // Calculate price based on time
+      const totalTime = (timeToUser + timeToDestination) / 60; // Total time in minutes
+      const price = (totalTime * 0.5).toFixed(2); // Calculate price based on time
 
-        return { ...marker, time: totalTime, price };
-      } catch (err) {
-        // Handle individual marker errors gracefully
-        console.error(`Error calculating time for driver ${marker.id}:`, err);
-        return { ...marker, time: 0, price: "0.00" };
-      }
+      return { ...marker, time: totalTime, price };
     });
 
     return await Promise.all(timesPromises);
   } catch (error) {
     console.error("Error calculating driver times:", error);
-    return [];
   }
 };

@@ -4,8 +4,7 @@ export const fetchAPI = async (url: string, options?: RequestInit) => {
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
-      // Fixed: Properly throw the error
-      throw new Error(`HTTP error! status: ${response.status}`);
+      new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.json();
   } catch (error) {
@@ -27,8 +26,7 @@ export const useFetch = <T>(url: string, options?: RequestInit) => {
       const result = await fetchAPI(url, options);
       setData(result.data);
     } catch (err) {
-      // Ensure err is an Error object before accessing message
-      setError(err instanceof Error ? err.message : String(err));
+      setError((err as Error).message);
     } finally {
       setLoading(false);
     }

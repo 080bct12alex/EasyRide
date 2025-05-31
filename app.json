@@ -1,3 +1,4 @@
+
 {
   "expo": {
     "name": "EasyRyde",
@@ -33,8 +34,14 @@
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
-     
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AlzaSy9KdjAt0Fot3NR-OliUMjaAM0yjDkQkrbS"
+        }
+      },
+      "intentFilters": [],
+      "googleServicesFile": false
     },
     "extra": {
       "eas": {

@@ -14,10 +14,6 @@ import { Driver, MarkerData } from "@/types/type";
 
 import Constants from "expo-constants";
 
-// ✅ MapLibre debug logging & telemetry toggle
-MaplibreGL.setTelemetryEnabled(false);
-MaplibreGL.setLogLevel(MaplibreGL.LogLevel.debug);
-
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 
@@ -64,11 +60,10 @@ const Map = () => {
         destinationLatitude,
         destinationLongitude,
       }).then((updatedDrivers) => {
-        if (updatedDrivers) {
-          setDrivers(updatedDrivers as MarkerData[]);
-        }
+        setDrivers(updatedDrivers as MarkerData[]);
       });
 
+      // Fetch directions from GoMaps Directions API
       (async () => {
         try {
           const res = await fetch(
@@ -76,13 +71,10 @@ const Map = () => {
           );
           const data = await res.json();
 
-          if (data.routes && data.routes.length > 0) {
-            const polyline = data.routes[0].overview_polyline.points;
-            const geojson = decodePolylineToGeoJSON(polyline);
-            setRouteGeoJSON(geojson);
-          } else {
-            setRouteGeoJSON(null);
-          }
+          // Decode polyline from route to GeoJSON LineString for MapLibre
+          const polyline = data.routes[0].overview_polyline.points;
+          const geojson = decodePolylineToGeoJSON(polyline);
+          setRouteGeoJSON(geojson);
         } catch (err) {
           console.error("Error fetching directions:", err);
           setRouteGeoJSON(null);
@@ -149,7 +141,7 @@ const Map = () => {
     <View style={{ flex: 1, borderRadius: 20, overflow: "hidden" }}>
       <MaplibreGL.MapView
         style={{ flex: 1 }}
-        styleURL="https://demotiles.maplibre.org/style.json"
+        styleURL={MaplibreGL.StyleURL.Street}
         compassEnabled={true}
         zoomEnabled={true}
         pitchEnabled={false}

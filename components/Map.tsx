@@ -15,6 +15,8 @@ import Constants from "expo-constants";
 const API_BASE_URL = Constants.expoConfig.extra?.apiUrl ?? "";
 const directionsAPI = Constants.expoConfig.extra?.DIRECTIONS_API_KEY ?? "";
 const maptilerKey = Constants.expoConfig.extra?.MAPTILER_API_KEY ?? "";
+const rasterTileURL = `https://api.maptiler.com/maps/streets/256/{z}/{x}/{y}.png?key=${maptilerKey}`;
+
 
 // Set up MapLibre
 MaplibreGL.setAccessToken(null); // Not used with MapTiler raster
@@ -145,15 +147,21 @@ const Map = () => {
         />
 
         {/* ✅ Use RasterSource for MapTiler */}
-        <MaplibreGL.RasterSource
-          id="maptiler"
-          tileSize={256}
-          tiles={[
-            `https://api.maptiler.com/tiles/streets-v2/{z}/{x}/{y}.png?key=${maptilerKey}`,
-          ]}
-        >
-          <MaplibreGL.RasterLayer id="tile-layer" sourceID="maptiler" />
-        </MaplibreGL.RasterSource>
+        {maptilerKey ? (
+  <MaplibreGL.RasterSource
+    id="maptiler"
+    tileSize={256}
+    tiles={[rasterTileURL]}
+
+  >
+    <MaplibreGL.RasterLayer id="tile-layer" sourceID="maptiler" />
+  </MaplibreGL.RasterSource>
+) : (
+  <Text style={{ position: 'absolute', top: 20, left: 10, color: 'red' }}>
+    Missing MapTiler API key
+  </Text>
+)}
+
 
         {/* User Marker */}
         <MaplibreGL.PointAnnotation

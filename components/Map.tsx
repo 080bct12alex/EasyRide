@@ -64,7 +64,9 @@ const Map = () => {
         destinationLatitude,
         destinationLongitude,
       }).then((updatedDrivers) => {
-        setDrivers(updatedDrivers as MarkerData[]);
+        if (updatedDrivers) {
+          setDrivers(updatedDrivers as MarkerData[]);
+        }
       });
 
       (async () => {
@@ -74,9 +76,13 @@ const Map = () => {
           );
           const data = await res.json();
 
-          const polyline = data.routes[0].overview_polyline.points;
-          const geojson = decodePolylineToGeoJSON(polyline);
-          setRouteGeoJSON(geojson);
+          if (data.routes && data.routes.length > 0) {
+            const polyline = data.routes[0].overview_polyline.points;
+            const geojson = decodePolylineToGeoJSON(polyline);
+            setRouteGeoJSON(geojson);
+          } else {
+            setRouteGeoJSON(null);
+          }
         } catch (err) {
           console.error("Error fetching directions:", err);
           setRouteGeoJSON(null);
@@ -143,7 +149,6 @@ const Map = () => {
     <View style={{ flex: 1, borderRadius: 20, overflow: "hidden" }}>
       <MaplibreGL.MapView
         style={{ flex: 1 }}
-        // ✅ Updated with working public tile server
         styleURL="https://demotiles.maplibre.org/style.json"
         compassEnabled={true}
         zoomEnabled={true}
